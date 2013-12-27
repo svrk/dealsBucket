@@ -28,11 +28,30 @@ def newcall():
 
   if str(tail):
     tail = str(tail.strip('?'))
-    if tail.split('=')[0] == 'division_id':  
-      response = UVDeals().get_deals_by_division(division_id = str(tail.split('=')[1]))
-    else: 
-      response = "{{'error':{'message': division_id is required as a URL parameter; Example: ?client_id=[your API key]','httpCode':400}}" 
+
+    #if tail.split('=')[0] == 'division_id':  
+    #  response = UVDeals().get_deals_by_division(division_id = str(tail.split('=')[1]))
+    #else: 
+    #  response = "{{'error':{'message': division_id is required as a URL parameter; Example: ?client_id=[your API key]','httpCode':400}}" 
+    l_country = ''
+    l_city = '' 
+    l_division = ''
+    response = ''
+    #tail = tail + ','
+    for l_opt in tail.split(','):
+      if l_opt.split('=')[0] == 'country':
+        l_country = l_opt.split('=')[1]
+      if l_opt.split('=')[0] == 'city':
+        l_city = l_opt.split('=')[1]
+      if l_opt.split('=')[0] == 'division_id':
+        l_division = l_opt.split('=')[1]
+    if l_division != '':
+      response = UVDeals().get_deals_by_division(division_id = division_id)    
+    else:
+      response = UVDeals().get_deals_by_country_and_city(l_country, l_city)  
+      
   else:
+    response = "{{'error':{'message': division_id or country,city are required as a URL parameter; Example: ?country=[country_name],city=[city_name] ','httpCode':400}}" 
     pass
     #TODO response for getting deals without division_id
 
