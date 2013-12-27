@@ -29,6 +29,14 @@ class UVDeals(object):
     return deals  
 
 
+  def get_deals_by_country_and_city(self, country = '', city = ''):
+
+    #deal_api_name = conf.get_config_value("deals","apis")
+
+    #TODO add deals from different deal api's
+    deals = UVCache().hget(country, city)
+    return deals
+
 
 
 
