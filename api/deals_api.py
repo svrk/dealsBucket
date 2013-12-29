@@ -20,54 +20,65 @@ conf = UVConfig()
 conf.init(DEALSBUCKET+"conf/deals_bucket.conf")
 
 
-@app.route('/uvdeals/', methods=['POST', 'GET'])
-def newcall():
+@app.route('/deals/', methods=['POST', 'GET'])
+def deals():
   print "ucp request url {0}".format(request.url)
 
   head, tail = os.path.split(request.url) 
 
   if str(tail):
     tail = str(tail.strip('?'))
-
-    #if tail.split('=')[0] == 'division_id':  
-    #  response = UVDeals().get_deals_by_division(division_id = str(tail.split('=')[1]))
-    #else: 
-    #  response = "{{'error':{'message': division_id is required as a URL parameter; Example: ?client_id=[your API key]','httpCode':400}}" 
     l_country = ''
     l_city = '' 
-    l_division = ''
     response = ''
-    #tail = tail + ','
     for l_opt in tail.split(','):
       if l_opt.split('=')[0] == 'country':
         l_country = l_opt.split('=')[1]
       if l_opt.split('=')[0] == 'city':
         l_city = l_opt.split('=')[1]
-      if l_opt.split('=')[0] == 'division_id':
-        l_division = l_opt.split('=')[1]
-    if l_division != '':
-      response = UVDeals().get_deals_by_division(division_id = division_id)    
-    else:
-      response = UVDeals().get_deals_by_country_and_city(l_country, l_city)  
+    if l_country != '' and l_city != '':
+      response = UVDeals().get_deals_by_country_and_city(l_country, l_city)    
       
   else:
-    response = "{{'error':{'message': division_id or country,city are required as a URL parameter; Example: ?country=[country_name],city=[city_name] ','httpCode':400}}" 
+    response = "{{'error':{'message': country or country,city are required as a URL parameter; Example: ?country=[country_name],city=[city_name] ','httpCode':400}}" 
     pass
     #TODO response for getting deals without division_id
 
   return Response(str(response), mimetype='application/json')
 
 
-@app.route('/error/', methods=['POST', 'GET'])
-def error():
-  print "ucp request url - {0}".format(request.url)
-  for key in request.form:
-    print '{0} - {1}'.format(key,request.form.get(key,''))
+@app.route('/deals_by_category/', methods=['POST', 'GET'])
+def deals_by_category():
+  print "ucp request url {0}".format(request.url)
 
-  #web app should implement business logic here such as actions need to be performed before hangup
+  head, tail = os.path.split(request.url)
 
-  response = "<Response>  </Response>"
+  if str(tail):
+    tail = str(tail.strip('?'))
+
+    l_country = ''
+    l_city = ''
+    l_category = ''
+    response = ''
+    for l_opt in tail.split(','):
+      if l_opt.split('=')[0] == 'country':
+        l_country = l_opt.split('=')[1]
+      if l_opt.split('=')[0] == 'city':
+        l_city = l_opt.split('=')[1]
+      if l_opt.split('=')[0] == 'category':
+        l_category = l_opt.split('=')[1]
+    if l_category != '':
+      response = UVDeals().get_deals_by_category(l_country, l_city, l_category = l_category)
+    else:
+      response = UVDeals().get_deals_by_country_and_city(l_country, l_city)
+
+  else:
+    response = "{{'error':{'message': category or country,city are required as a URL parameter; Example: ?country=[country_name],city=[city_name] ','httpCode':400}}"
+    pass
+
   return Response(str(response), mimetype='application/json')
+
+
 
 if __name__ == "__main__":
   port = int(os.environ.get('PORT', 4000))
