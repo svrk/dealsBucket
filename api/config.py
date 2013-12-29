@@ -76,13 +76,12 @@ class UVConfig(object):
 
 if __name__ == "__main__":
   conf = UVConfig()
-  conf.init("/root/ucp/ucp/conf/ucp.conf")
+  #conf.init("/root/ucp/ucp/conf/ucp.conf")
+  conf.init("/home/uvadmin/dealsBucket/conf/uv_countries.conf")
   
   
   print "Start testing"
-  print conf.get_config_value("core","logfile_name")
-  print conf.get_config_value("database","db_user_name")
-  print conf.get_config_value("database","logfile_path")
-  print conf.get_config_value("database","db_name.core")
+  print conf.get_config_value("core","default_lang")
+  print conf.get_config_value("groupon","USA")
   print conf.get_config_value("database", "db_user")
  
